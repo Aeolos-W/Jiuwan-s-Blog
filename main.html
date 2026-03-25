@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What's new | 数学博客</title>
+    
+    <!-- MathJax 支持数学公式 -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        /* 基础重置与字体设置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Computer Modern Serif", "Georgia", "Times New Roman", serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #006A80;
+            background-color: #fff;
+        }
+        
+        /* 链接样式 */
+        a {
+            color: #006A80;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+            color: #006A80;
+        }
+        
+        /* 头部区域 */
+        header {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .header-title {
+            font-size: 32px;
+            font-weight: normal;
+            margin-bottom: 5px;
+            color: #000;
+        }
+        
+        .header-subtitle {
+            font-style: italic;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        /* 导航栏 */
+        nav {
+            margin-top: 10px;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            font-size: 14px;
+        }
+        
+        nav a {
+            margin-right: 20px;
+            color: #006A80;
+        }
+        
+        nav a:hover {
+            text-decoration: underline;
+        }
+        
+        /* 主容器 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 40px;
+            padding: 20px;
+        }
+        
+        /* 左侧边栏 */
+        aside {
+            width: 280px;
+            flex-shrink: 0;
+            font-size: 14px;
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 30px;
+        }
+        
+        .sidebar-title {
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #999;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        /* 搜索框样式 - 增强版 */
+        .search-container {
+            position: relative;
+            margin-bottom: 10px;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 8px 30px 8px 10px;
+            border: 1px solid #ccc;
+            font-family: inherit;
+            font-size: 13px;
+            border-radius: 3px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: #0066cc;
+            box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.1);
+        }
+        
+        .search-clear {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            font-size: 16px;
+            display: none;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            text-align: center;
+        }
+        
+        .search-clear:hover {
+            color: #333;
+        }
+        
+        .search-stats {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+            display: none;
+        }
+        
+        /* 动态列表样式 */
+        .dynamic-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .dynamic-list li {
+            margin-bottom: 6px;
+            line-height: 1.4;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+        
+        .dynamic-list a {
+            color: #333;
+            flex: 1;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        
+        .dynamic-list a:hover {
+            color: #006A80;
+        }
+        
+        .dynamic-list .count {
+            color: #999;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        
+        .dynamic-list li.active {
+            font-weight: bold;
+        }
+        
+        .dynamic-list li.active a {
+            color: #006A80;
+        }
+        
+        /* 归档列表的特殊样式 - 双列 */
+        .archive-list {
+            columns: 2;
+            column-gap: 15px;
+        }
+        
+        .archive-list li {
+            break-inside: avoid;
+            margin-bottom: 4px;
+        }
+        
+        /* 标签云 */
+        .tag-cloud {
+            line-height: 1.8;
+        }
+        
+        .tag {
+            display: inline-block;
+            margin-right: 8px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        
+        .tag:hover {
+            opacity: 0.7;
+            text-decoration: underline;
+        }
+        
+        .tag-lg { font-size: 18px; font-weight: bold; }
+        .tag-md { font-size: 14px; }
+        .tag-sm { font-size: 12px; color: #666; }
+        
+        /* 主内容区 */
+        main {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        /* 筛选状态栏 */
+        .filter-status {
+            background: #f0f7ff;
+            border: 1px solid #0066cc;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+        
+        .filter-status.active {
+            display: flex;
+        }
+        
+        .filter-tags {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-tag {
+            background: #0066cc;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .filter-tag button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 0;
+            font-size: 14px;
+            line-height: 1;
+        }
+        
+        .clear-all-btn {
+            background: none;
+            border: 1px solid #0066cc;
+            color: #0066cc;
+            padding: 3px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .clear-all-btn:hover {
+            background: #0066cc;
+            color: white;
+        }
+        
+        /* 文章卡片 */
+        article {
+            margin-bottom: 40px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid #eee;
+            transition: opacity 0.3s;
+        }
+        
+        article:last-child {
+            border-bottom: none;
+        }
+        
+        article.hidden {
+            display: none;
+        }
+        
+        .post-title {
+            font-size: 24px;
+            font-weight: normal;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+        
+        .post-meta {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 20px;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+        }
+        
+        .post-meta a {
+            color: #666;
+        }
+        
+        .post-content {
+            text-align: justify;
+            hyphens: auto;
+        }
+        
+        .post-content p {
+            margin-bottom: 1em;
+        }
+        
+        /* 定理框样式 */
+        .theorem-box {
+            border: 1px solid #000;
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #fafafa;
+        }
+        
+        .theorem-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .theorem-content {
+            margin-left: 0;
+        }
+        
+        /* 无结果提示 */
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+            font-style: italic;
+            display: none;
+        }
+        
+        .no-results.show {
+            display: block;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            aside {
+                width: 100%;
+                order: 2;
+                position: static;
+            }
+            
+            main {
+                order: 1;
+            }
+            
+            .archive-list {
+                columns: 3;
+            }
+        }
+        
+        /* 页脚 */
+        footer {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 class="header-title">What's new</h1>
+        <p class="header-subtitle">Updates on my research and expository papers, discussion of open problems, and other maths-related topics.</p>
+        
+        <nav>
+            <a href="#" onclick="resetAllFilters(); return false;">Home</a>
+            <a href="#">About</a>
+            <a href="#">Career advice</a>
+            <a href="#">On writing</a>
+            <a href="#">Books</a>
+            <a href="#">Mastodon+</a>
+            <a href="#">Applets</a>
+            <a href="#">Subscribe to feed</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <aside>
+            <!-- 搜索区域 -->
+            <div class="sidebar-section">
+                <div class="sidebar-title">Search</div>
+                <div class="search-container">
+                    <input type="text" id="searchInput" class="search-box" placeholder="Search posts..." autocomplete="off">
+                    <button id="clearSearch" class="search-clear" title="Clear search">×</button>
+                </div>
+                <div id="searchStats" class="search-stats"></div>
+            </div>
+
+            <!-- 标签云 -->
+            <div class="sidebar-section">
+                <div class="tag-cloud" id="tagCloud">
+                    <span class="tag tag-lg" onclick="searchByTag('Gowers uniformity norms')">Gowers uniformity norms</span>
+                    <span class="tag tag-sm" onclick="searchByTag('graph theory')">graph theory</span>
+                    <span class="tag tag-lg" onclick="searchByTag('Hilbert')">Hilbert's fifth problem</span>
+                    <span class="tag tag-md" onclick="searchByTag('prime gaps')">prime gaps</span>
+                    <span class="tag tag-lg" onclick="searchByTag('random matrices')">random matrices</span>
+                    <span class="tag tag-lg" onclick="searchByTag('polymath')">polymath8</span>
+                </div>
+            </div>
+
+            <!-- 热门文章 -->
+            <div class="sidebar-section">
+                <div class="sidebar-title">Top Posts</div>
+                <ul class="dynamic-list">
+                    <li><a href="#">Career advice</a></li>
+                    <li><a href="#">On writing</a></li>
+                    <li><a href="#">Books</a></li>
+                    <li><a href="#">Does one have to be a genius to do maths?</a></li>
+                </ul>
+            </div>
+
+            <!-- 归档 - 动态生成 -->
+            <div class="sidebar-section">
+                <div class="sidebar-title">
+                    Archives
+                    <span style="font-size: 11px; font-weight: normal; color: #999;" id="totalPosts"></span>
+                </div>
+                <ul id="archivesList" class="dynamic-list archive-list">
+                    <!-- 由JavaScript动态生成 -->
+                </ul>
+            </div>
+
+            <!-- 分类 - 动态生成 -->
+            <div class="sidebar-section">
+                <div class="sidebar-title">Categories</div>
+                <ul id="categoriesList" class="dynamic-list">
+                    <!-- 由JavaScript动态生成 -->
+                </ul>
+            </div>
+        </aside>
+
+        <main id="mainContent">
+            <!-- 筛选状态栏 -->
+            <div id="filterStatus" class="filter-status">
+                <div class="filter-tags" id="activeFilters"></div>
+                <button class="clear-all-btn" onclick="resetAllFilters()">Clear All</button>
+            </div>
+
+            <!-- 无结果提示 -->
+            <div id="noResults" class="no-results">
+                <p>No posts found matching your criteria.</p>
+            </div>
+
+            <!-- 文章列表 -->
+            <div id="postsContainer">
+                <!-- 文章 1 -->
+                <article data-title="Local Bernstein theory, and lower bounds for Lebesgue constants" 
+                         data-tags="Bernstein theory,Lebesgue constants,exponential type,Lagrange interpolation,Paul Erdos,trigonometric polynomials,math.CA,math.CV"
+                         data-date="2026-03-23"
+                         data-categories="math.CA,math.CV,paper">
+                    <h2 class="post-title"><a href="#">Local Bernstein theory, and lower bounds for Lebesgue constants</a></h2>
+                    <div class="post-meta">
+                        23 March, 2026 in <a href="#" onclick="filterByCategory('math.CA'); return false;">math.CA</a>, <a href="#" onclick="filterByCategory('math.CV'); return false;">math.CV</a>, <a href="#">paper</a> | 
+                        Tags: <a href="#">exponential type</a>, <a href="#">Lagrange interpolation</a>, <a href="#">Paul Erdos</a> | 
+                        by Terence Tao | <a href="#">Leave a comment</a>
+                    </div>
+                    <div class="post-content">
+                        <p>I've just uploaded to the arXiv my paper "Local Bernstein theory, and lower bounds for Lebesgue constants". This paper was initially motivated by a problem of Erdős on Lagrange interpolation...</p>
+                    </div>
+                </article>
+
+                <!-- 文章 2 -->
+                <article data-title="The integrated explicit analytic number theory network" 
+                         data-tags="analytic number theory,Lean4,prime number theorem,advertising,math.NT"
+                         data-date="2026-01-15"
+                         data-categories="advertising,math.NT">
+                    <h2 class="post-title"><a href="#">The integrated explicit analytic number theory network</a></h2>
+                    <div class="post-meta">
+                        15 January, 2026 in <a href="#" onclick="filterByCategory('advertising'); return false;">advertising</a>, <a href="#" onclick="filterByCategory('math.NT'); return false;">math.NT</a> | 
+                        Tags: <a href="#">analytic number theory</a>, <a href="#">Lean4</a> | 
+                        by Terence Tao | <a href="#">7 comments</a>
+                    </div>
+                    <div class="post-content">
+                        <p>Like many other areas of modern analysis, analytic number theory often relies on the convenient device of asymptotic notation to express its results...</p>
+                    </div>
+                </article>
+
+                <!-- 文章 3 -->
+                <article data-title="A crowdsourced repository for optimization constants" 
+                         data-tags="optimization constants,database,optimization,Erdos problem site,AI,GitHub"
+                         data-date="2026-01-22"
+                         data-categories="admin,math.GM">
+                    <h2 class="post-title"><a href="1.html">A crowdsourced repository for optimization constants?</a></h2>
+                    <div class="post-meta">
+                        22 January, 2026 in <a href="#" onclick="filterByCategory('admin'); return false;">admin</a>, <a href="#" onclick="filterByCategory('math.GM'); return false;">math.GM</a> | 
+                        by Terence Tao | <a href="#">29 comments</a>
+                    </div>
+                    <div class="post-content">
+                        <p>Thomas Bloom's Erdős problem site has become a real hotbed of activity in recent months...</p>
+                    </div>
+                </article>
+
+                <!-- 文章 4 -->
+                <article data-title="IPAM industrial short course in generative AI algorithms" 
+                         data-tags="generative AI,IPAM,Xavier Bresson,deep learning,machine learning"
+                         data-date="2026-02-02"
+                         data-categories="advertising">
+                    <h2 class="post-title"><a href="#">IPAM industrial short course in generative AI algorithms</a></h2>
+                    <div class="post-meta">
+                        2 February, 2026 in <a href="#" onclick="filterByCategory('advertising'); return false;">advertising</a> | 
+                        by Terence Tao | <a href="#">2 comments</a>
+                    </div>
+                    <div class="post-content">
+                        <p>IPAM is holding an Industrial Short Course on Generative AI Algorithms on March 5-6, 2026...</p>
+                    </div>
+                </article>
+
+                <!-- 文章 5 -->
+                <article data-title="Six Math Essentials" 
+                         data-tags="book,popular mathematics,numbers,algebra,geometry,probability,analysis,dynamics"
+                         data-date="2026-02-16"
+                         data-categories="advertising,book,math.GM">
+                    <h2 class="post-title"><a href="#">Six Math Essentials</a></h2>
+                    <div class="post-meta">
+                        16 February, 2026 in <a href="#" onclick="filterByCategory('advertising'); return false;">advertising</a>, <a href="#" onclick="filterByCategory('book'); return false;">book</a>, <a href="#" onclick="filterByCategory('math.GM'); return false;">math.GM</a> | 
+                        by Terence Tao | <a href="#">22 comments</a>
+                    </div>
+                    <div class="post-content">
+                        <p>Just a brief announcement that I have been working with Quanta Books to publish a short book in popular mathematics...</p>
+                    </div>
+                </article>
+
+                <!-- 文章 6 -->
+                <article data-title="SLMath Deputy Director Search" 
+                         data-tags="SLMath,MSRI,job,academic position,administration"
+                         data-date="2026-02-27"
+                         data-categories="advertising">
+                    <h2 class="post-title"><a href="#">SLMath Deputy Director Search</a></h2>
+                    <div class="post-meta">
+                        27 February, 2026 in <a href="#" onclick="filterByCategory('advertising'); return false;">advertising</a> | 
+                        by Terence Tao | <a href="#">Leave a comment</a>
+                    </div>
+                    <div class="post-content">
+                        <p>[This post is written in my capacity as Vice-Chair of the Board of Trustees of SLMath. -T.]</p>
+                    </div>
+                </article>
+
+                <!-- 文章 7 (添加更多以展示统计效果) -->
+                <article data-title="Machine Learning for Mathematicians" 
+                         data-tags="machine learning,AI,deep learning,mathematics education"
+                         data-date="2025-12-10"
+                         data-categories="expository,math.GM">
+                    <h2 class="post-title"><a href="#">Machine Learning for Mathematicians</a></h2>
+                    <div class="post-meta">
+                        10 December, 2025 in <a href="#" onclick="filterByCategory('expository'); return false;">expository</a>, <a href="#" onclick="filterByCategory('math.GM'); return false;">math.GM</a> | 
+                        by Terence Tao | <a href="#">15 comments</a>
+                    </div>
+                    <div class="post-content">
+                        <p>An introduction to machine learning concepts for pure mathematicians...</p>
+                    </div>
+                </article>
+
+                <!-- 文章 8 -->
+                <article data-title="Updates on the Polynomial Method" 
+                         data-tags="polynomial method,combinatorics,algebraic geometry"
+                         data-date="2025-11-20"
+                         data-categories="expository,math.CO,math.AG">
+                    <h2 class="post-title"><a href="#">Updates on the Polynomial Method</a></h2>
+                    <div class="post-meta">
+                        20 November, 2025 in <a href="#" onclick="filterByCategory('expository'); return false;">expository</a>, <a href="#" onclick="filterByCategory('math.CO'); return false;">math.CO</a>, <a href="#" onclick="filterByCategory('math.AG'); return false;">math.AG</a> | 
+                        by Terence Tao | <a href="#">8 comments</a>
+                    </div>
+                    <div class="post-content">
+                        <p>Recent developments in the polynomial method and its applications...</p>
+                    </div>
+                </article>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 What's new | <span id="footerStats"></span></p>
+    </footer>
+
+    <script>
+        // 全局状态管理
+        const state = {
+            searchTerm: '',
+            selectedCategory: null,
+            selectedArchive: null
+        };
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initStats();
+            initSearch();
+            applyFilters();
+            
+            // 键盘快捷键
+            document.addEventListener('keydown', (e) => {
+                if (e.key === '/' && document.activeElement.id !== 'searchInput') {
+                    e.preventDefault();
+                    document.getElementById('searchInput').focus();
+                }
+                if (e.key === 'Escape') {
+                    resetAllFilters();
+                }
+            });
+        });
+
+        // 初始化统计 - 自动提取并生成归档和分类
+        function initStats() {
+            const articles = document.querySelectorAll('article');
+            const archives = {}; // { '2026-03': { count: 2, label: 'March 2026' } }
+            const categories = {}; // { 'math.CA': 5, 'advertising': 3 }
+
+            articles.forEach(article => {
+                const dateStr = article.getAttribute('data-date'); // 2026-03-23
+                const catsStr = article.getAttribute('data-categories'); // math.CA,math.CV
+                
+                if (dateStr) {
+                    const [year, month] = dateStr.split('-');
+                    const key = `${year}-${month}`;
+                    const monthNames = ['', 'January', 'February', 'March', 'April', 'May', 'June', 
+                                       'July', 'August', 'September', 'October', 'November', 'December'];
+                    const label = `${monthNames[parseInt(month)]} ${year}`;
+                    
+                    if (!archives[key]) {
+                        archives[key] = { count: 0, label: label, year: year, month: month };
+                    }
+                    archives[key].count++;
+                }
+
+                if (catsStr) {
+                    catsStr.split(',').forEach(cat => {
+                        const trimmed = cat.trim();
+                        if (trimmed) {
+                            categories[trimmed] = (categories[trimmed] || 0) + 1;
+                        }
+                    });
+                }
+            });
+
+            // 渲染归档列表（按时间倒序）
+            renderArchives(archives);
+            
+            // 渲染分类列表（按文章数量倒序）
+            renderCategories(categories);
+            
+            // 更新总文章数
+            document.getElementById('totalPosts').textContent = `(${articles.length} posts)`;
+            document.getElementById('footerStats').textContent = `Total ${articles.length} posts`;
+        }
+
+        // 渲染归档列表
+        function renderArchives(archives) {
+            const list = document.getElementById('archivesList');
+            list.innerHTML = '';
+            
+            // 按时间倒序排序
+            const sortedKeys = Object.keys(archives).sort().reverse();
+            
+            sortedKeys.forEach(key => {
+                const item = archives[key];
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <a onclick="filterByArchive('${key}', '${item.label}'); return false;">${item.label}</a>
+                    <span class="count">(${item.count})</span>
+                `;
+                li.setAttribute('data-archive', key);
+                list.appendChild(li);
+            });
+        }
+
+        // 渲染分类列表
+        function renderCategories(categories) {
+            const list = document.getElementById('categoriesList');
+            list.innerHTML = '';
+            
+            // 按文章数量倒序排序
+            const sortedCats = Object.entries(categories).sort((a, b) => b[1] - a[1]);
+            
+            sortedCats.forEach(([cat, count]) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <a onclick="filterByCategory('${cat}'); return false;">${cat}</a>
+                    <span class="count">(${count})</span>
+                `;
+                li.setAttribute('data-category', cat);
+                list.appendChild(li);
+            });
+        }
+
+        // 搜索功能
+        function initSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const clearBtn = document.getElementById('clearSearch');
+            
+            searchInput.addEventListener('input', (e) => {
+                state.searchTerm = e.target.value.toLowerCase().trim();
+                clearBtn.style.display = state.searchTerm ? 'block' : 'none';
+                applyFilters();
+            });
+            
+            clearBtn.addEventListener('click', () => {
+                searchInput.value = '';
+                state.searchTerm = '';
+                clearBtn.style.display = 'none';
+                applyFilters();
+            });
+        }
+
+        // 按标签搜索（辅助函数）
+        function searchByTag(tag) {
+            document.getElementById('searchInput').value = tag;
+            state.searchTerm = tag.toLowerCase();
+            document.getElementById('clearSearch').style.display = 'block';
+            applyFilters();
+        }
+
+        // 按分类筛选
+        function filterByCategory(category) {
+            if (state.selectedCategory === category) {
+                state.selectedCategory = null; // 再次点击取消选择
+            } else {
+                state.selectedCategory = category;
+                // 如果选择了分类，清除归档筛选（互斥逻辑，可选）
+                // state.selectedArchive = null;
+            }
+            applyFilters();
+            updateSidebarActiveState();
+        }
+
+        // 按归档筛选
+        function filterByArchive(key, label) {
+            if (state.selectedArchive === key) {
+                state.selectedArchive = null;
+            } else {
+                state.selectedArchive = key;
+                // 如果选择了归档，清除分类筛选（互斥逻辑，可选）
+                // state.selectedCategory = null;
+            }
+            applyFilters();
+            updateSidebarActiveState();
+        }
+
+        // 统一应用所有筛选条件
+        function applyFilters() {
+            const articles = document.querySelectorAll('article');
+            let visibleCount = 0;
+            
+            articles.forEach(article => {
+                const title = article.getAttribute('data-title').toLowerCase();
+                const tags = article.getAttribute('data-tags').toLowerCase();
+                const content = article.textContent.toLowerCase();
+                const categories = article.getAttribute('data-categories');
+                const date = article.getAttribute('data-date'); // 2026-03-23
+                
+                // 检查搜索匹配
+                const matchesSearch = !state.searchTerm || 
+                    title.includes(state.searchTerm) || 
+                    tags.includes(state.searchTerm) || 
+                    content.includes(state.searchTerm);
+                
+                // 检查分类匹配
+                const matchesCategory = !state.selectedCategory || 
+                    (categories && categories.split(',').map(c => c.trim()).includes(state.selectedCategory));
+                
+                // 检查归档匹配（比较年月）
+                const matchesArchive = !state.selectedArchive || 
+                    (date && date.startsWith(state.selectedArchive));
+                
+                // 所有条件必须同时满足（AND逻辑）
+                if (matchesSearch && matchesCategory && matchesArchive) {
+                    article.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    article.classList.add('hidden');
+                }
+            });
+            
+            // 更新UI状态
+            updateFilterStatus(visibleCount);
+            document.getElementById('noResults').classList.toggle('show', visibleCount === 0);
+        }
+
+        // 更新筛选状态栏显示
+        function updateFilterStatus(visibleCount) {
+            const statusBar = document.getElementById('filterStatus');
+            const activeFilters = document.getElementById('activeFilters');
+            
+            activeFilters.innerHTML = '';
+            let hasFilters = false;
+            
+            // 搜索词标签
+            if (state.searchTerm) {
+                hasFilters = true;
+                activeFilters.innerHTML += `
+                    <span class="filter-tag">
+                        Search: "${escapeHtml(state.searchTerm)}"
+                        <button onclick="clearSearch()">×</button>
+                    </span>
+                `;
+            }
+            
+            // 分类标签
+            if (state.selectedCategory) {
+                hasFilters = true;
+                activeFilters.innerHTML += `
+                    <span class="filter-tag">
+                        Category: ${state.selectedCategory}
+                        <button onclick="filterByCategory('${state.selectedCategory}')">×</button>
+                    </span>
+                `;
+            }
+            
+            // 归档标签
+            if (state.selectedArchive) {
+                hasFilters = true;
+                const label = document.querySelector(`li[data-archive="${state.selectedArchive}"] a`)?.textContent || state.selectedArchive;
+                activeFilters.innerHTML += `
+                    <span class="filter-tag">
+                        Archive: ${label}
+                        <button onclick="filterByArchive('${state.selectedArchive}')">×</button>
+                    </span>
+                `;
+            }
+            
+            statusBar.classList.toggle('active', hasFilters);
+            
+            // 更新搜索统计文本
+            const stats = document.getElementById('searchStats');
+            if (hasFilters) {
+                stats.style.display = 'block';
+                stats.textContent = `Showing ${visibleCount} post${visibleCount !== 1 ? 's' : ''}`;
+            } else {
+                stats.style.display = 'none';
+            }
+        }
+
+        // 更新侧边栏选中状态
+        function updateSidebarActiveState() {
+            // 清除所有active类
+            document.querySelectorAll('.dynamic-list li').forEach(li => li.classList.remove('active'));
+            
+            // 标记当前选中的分类
+            if (state.selectedCategory) {
+                const catLi = document.querySelector(`li[data-category="${state.selectedCategory}"]`);
+                if (catLi) catLi.classList.add('active');
+            }
+            
+            // 标记当前选中的归档
+            if (state.selectedArchive) {
+                const archLi = document.querySelector(`li[data-archive="${state.selectedArchive}"]`);
+                if (archLi) archLi.classList.add('active');
+            }
+        }
+
+        // 清除搜索
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            state.searchTerm = '';
+            document.getElementById('clearSearch').style.display = 'none';
+            applyFilters();
+        }
+
+        // 重置所有筛选
+        function resetAllFilters() {
+            state.searchTerm = '';
+            state.selectedCategory = null;
+            state.selectedArchive = null;
+            
+            document.getElementById('searchInput').value = '';
+            document.getElementById('clearSearch').style.display = 'none';
+            
+            applyFilters();
+            updateSidebarActiveState();
+        }
+
+        // 工具函数：转义HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+
+</body>
+</html>
