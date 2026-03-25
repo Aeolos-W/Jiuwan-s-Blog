@@ -1,0 +1,1419 @@
+<!-- 1.html - 博客详情页 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rogers' theorem on sieving | What's new</title>
+    
+    <!-- MathJax 支持数学公式 -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        /* 基础重置与字体设置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Computer Modern Serif", "Georgia", "Times New Roman", serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fff;
+        }
+        
+        /* 打印样式 */
+        @media print {
+            aside, .share-section, .comment-form, .reply-btn, nav, footer {
+                display: none !important;
+            }
+            
+            main {
+                width: 100% !important;
+                margin: 0 !important;
+            }
+            
+            body {
+                font-size: 12pt;
+                line-height: 1.5;
+            }
+            
+            a {
+                text-decoration: none;
+                color: #000;
+            }
+            
+            .theorem-box, .example-box {
+                border: 1pt solid #000 !important;
+                break-inside: avoid;
+            }
+        }
+        
+        /* 链接样式 */
+        a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+            color: #003366;
+        }
+        
+        /* 头部区域 */
+        header {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .header-title {
+            font-size: 32px;
+            font-weight: normal;
+            margin-bottom: 5px;
+            color: #000;
+        }
+        
+        .header-subtitle {
+            font-style: italic;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        /* 导航栏 */
+        nav {
+            margin-top: 10px;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            font-size: 14px;
+        }
+        
+        nav a {
+            margin-right: 20px;
+            color: #0066cc;
+        }
+        
+        nav a:hover {
+            text-decoration: underline;
+        }
+        
+        /* 主容器 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 40px;
+            padding: 20px;
+        }
+        
+        /* 左侧边栏 */
+        aside {
+            width: 280px;
+            flex-shrink: 0;
+            font-size: 14px;
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 30px;
+        }
+        
+        .sidebar-title {
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #999;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+        
+        /* 搜索框 */
+        .search-container {
+            position: relative;
+            margin-bottom: 10px;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 8px 30px 8px 10px;
+            border: 1px solid #ccc;
+            font-family: inherit;
+            font-size: 13px;
+            border-radius: 3px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: #0066cc;
+            box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.1);
+        }
+        
+        .search-clear {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            font-size: 16px;
+            display: none;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            text-align: center;
+        }
+        
+        .search-clear:hover {
+            color: #333;
+        }
+        
+        .search-stats {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+            display: none;
+        }
+        
+        /* 最近评论列表 */
+        .recent-comment {
+            margin-bottom: 12px;
+            line-height: 1.4;
+            font-size: 13px;
+        }
+        
+        .recent-comment .author {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .recent-comment .on-text {
+            color: #666;
+        }
+        
+        .recent-comment .post-title {
+            color: #006A80;
+        }
+        
+        /* 列表样式 */
+        .sidebar-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .sidebar-list li {
+            margin-bottom: 6px;
+            line-height: 1.4;
+            font-size: 13px;
+        }
+        
+        .sidebar-list a {
+            color: #333;
+        }
+        
+        .sidebar-list a:hover {
+            color: #006A80;
+        }
+        
+        /* 主内容区 */
+        main {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        /* 文章标题 */
+        .post-header {
+            margin-bottom: 30px;
+        }
+        
+        .post-title {
+            font-size: 28px;
+            font-weight: normal;
+            margin-bottom: 10px;
+            line-height: 1.3;
+            color: #000;
+        }
+        
+        .post-meta {
+            font-size: 13px;
+            color: #666;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            margin-bottom: 20px;
+        }
+        
+        .post-meta a {
+            color: #006A80;
+        }
+        
+        /* 文章内容 */
+        .post-content {
+            text-align: justify;
+            hyphens: auto;
+            margin-bottom: 40px;
+        }
+        
+        .post-content p {
+            margin-bottom: 1em;
+        }
+        
+        /* 定理框样式 */
+        .theorem-box, .example-box {
+            border: 1px solid #000;
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #fafafa;
+        }
+        
+        .theorem-title, .example-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .theorem-content, .example-content {
+            margin-left: 0;
+        }
+        
+        /* 分享区域 */
+        .share-section {
+            margin: 30px 0;
+            padding: 20px 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .share-title {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .share-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .share-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            background: #f8f8f8;
+            border-radius: 3px;
+            font-size: 13px;
+            cursor: pointer;
+            color: #333;
+            text-decoration: none;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+        }
+        
+        .share-btn:hover {
+            background: #e8e8e8;
+            text-decoration: none;
+            color: #000;
+        }
+        
+        .share-btn.primary {
+            background: #0066cc;
+            color: white;
+            border-color: #0052a3;
+        }
+        
+        .share-btn.primary:hover {
+            background: #0052a3;
+        }
+        
+        .like-count {
+            font-size: 13px;
+            color: #666;
+            margin-left: 10px;
+        }
+        
+        /* 评论区 */
+        .comments-section {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #333;
+        }
+        
+        .comments-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .comments-feed {
+            font-size: 12px;
+            font-weight: normal;
+        }
+        
+        .comments-feed a {
+            color: #666;
+        }
+        
+        /* 评论列表 */
+        .comment-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .comment {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .comment:last-child {
+            border-bottom: none;
+        }
+        
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+        
+        .comment-author {
+            font-weight: bold;
+            color: #000;
+        }
+        
+        .comment-date {
+            color: #666;
+            font-size: 12px;
+        }
+        
+        .comment-content {
+            margin-left: 0;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        
+        .comment-content p {
+            margin-bottom: 0.5em;
+        }
+        
+        .comment-actions {
+            font-size: 12px;
+            color: #006A80;
+        }
+        
+        .comment-actions a {
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        
+        /* 嵌套评论 */
+        .comment-replies {
+            margin-left: 30px;
+            margin-top: 20px;
+            padding-left: 20px;
+            border-left: 2px solid #eee;
+        }
+        
+        .comment-replies .comment {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        /* 回复表单 */
+        .reply-form {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 4px;
+        }
+        
+        .reply-form.active {
+            display: block;
+        }
+        
+        .reply-form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 100px;
+            margin-bottom: 10px;
+        }
+        
+        .reply-form button {
+            background: #006A80;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 13px;
+            margin-right: 10px;
+        }
+        
+        .reply-form button:hover {
+            background: #0052a3;
+        }
+        
+        .reply-form .cancel-btn {
+            background: #999;
+        }
+        
+        .reply-form .cancel-btn:hover {
+            background: #666;
+        }
+        
+        /* 主评论表单 */
+        .comment-form {
+            margin-top: 40px;
+            padding: 20px;
+            background: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 4px;
+        }
+        
+        .comment-form h3 {
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: normal;
+        }
+        
+        .comment-form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 120px;
+            margin-bottom: 10px;
+        }
+        
+        .comment-form input[type="text"],
+        .comment-form input[type="email"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            font-family: inherit;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .comment-form .form-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .comment-form .form-row input {
+            flex: 1;
+        }
+        
+        .comment-form button {
+            background: #006A80;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .comment-form button:hover {
+            background: #006A80;
+        }
+        
+        .comment-note {
+            font-size: 12px;
+            color: #666;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        /* 导航链接 */
+        .post-navigation {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+        
+        .nav-prev:before {
+            content: "« ";
+        }
+        
+        .nav-next:after {
+            content: " »";
+        }
+        
+        /* 页脚 */
+        footer {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid #eee;
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            aside {
+                width: 100%;
+                position: static;
+            }
+            
+            .comment-replies {
+                margin-left: 15px;
+                padding-left: 10px;
+            }
+        }
+        
+        /* 工具提示 */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 120px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 12px;
+        }
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 class="header-title">What's new</h1>
+        <p class="header-subtitle">Updates on my research and expository papers, discussion of open problems, and other maths-related topics. By Terence Tao</p>
+        
+        <nav>
+            <a href="main.html">Home</a>
+            <a href="#">About</a>
+            <a href="#">Career advice</a>
+            <a href="#">On writing</a>
+            <a href="#">Books</a>
+            <a href="#">Mastodon+</a>
+            <a href="#">Applets</a>
+            <a href="#">Subscribe to feed</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <aside>
+            <!-- 最近评论 -->
+            <div class="sidebar-section">
+                <div class="sidebar-title">Recent Comments</div>
+                <div class="recent-comment">
+                    <span class="author">J</span> <span class="on-text">on</span> <a href="#" class="post-title">245A, Notes 5: Differentiation...</a>
+                </div>
+                <div class="recent-comment">
+                    <span class="author">Anonymous</span> <span class="on-text">on</span> <a href="#" class="post-title">Inequalities, convergence, and...</a>
+                </div>
+                <div class="recent-comment">
+                    <span class="author">Anonymous</span> <span class="on-text">on</span> <a href="#" class="post-title">245A, Notes 3: Integration on...</a>
+                </div>
+                <div class="recent-comment">
+                    <span class="author">kendonshirley</span> <span class="on-text">on</span> <a href="#" class="post-title">Mathematics Distillation Chall...</a>
+                </div>
+                <div class="recent-comment">
+                    <span class="author">Terence Tao</span> <span class="on-text">on</span> <a href="#" class="post-title">Mathematics Distillation Chall...</a>
+                </div>
+                <div class="recent-comment">
+                    <span class="author">Petr Kucheriaviy</span> <span class="on-text">on</span> <a href="#" class="post-title">Rogers' theorem on ...</a>
+                </div>
+            </div>
+
+            <!-- 搜索 -->
+            <div class="sidebar-section">
+                <input type="text" class="search-box" placeholder="Search...">
+                <button class="search-btn">Search</button>
+            </div>
+
+            <!-- 热门文章 -->
+            <div class="sidebar-section">
+                <div class="sidebar-title">Top Posts</div>
+                <ul class="sidebar-list">
+                    <li><a href="#">Mathematics Distillation Challenge - Equational Theories</a></li>
+                    <li><a href="#">Career advice</a></li>
+                    <li><a href="#">Books</a></li>
+                    <li><a href="#">Does one have to be a genius to do maths?</a></li>
+                </ul>
+            </div>
+
+            <!-- 归档 -->
+            <div class="sidebar-section">
+                <div class="sidebar-title">Archives</div>
+                <ul class="sidebar-list">
+                    <li><a href="#">March 2026</a> (2)</li>
+                    <li><a href="#">February 2026</a> (3)</li>
+                    <li><a href="#">January 2026</a> (4)</li>
+                    <li><a href="#">December 2025</a> (5)</li>
+                    <li><a href="#">November 2025</a> (5)</li>
+                </ul>
+            </div>
+        </aside>
+
+        <main>
+            <article>
+                <div class="post-header">
+                    <h1 class="post-title">Rogers' theorem on sieving</h1>
+                    <div class="post-meta">
+                        19 January, 2026 in <a href="#">expository</a>, <a href="#">math.CO</a>, <a href="#">math.NT</a> | 
+                        Tags: <a href="#">Paul Erdos</a>, <a href="#">Rogers' theorem</a>, <a href="#">sieving</a> | 
+                        by <a href="#">Terence Tao</a>
+                    </div>
+                </div>
+
+                <div class="post-content">
+                    <p>A basic problem in sieve theory is to understand what happens when we start with the integers <strong>Z</strong> (or some subinterval of the integers) and remove some congruence classes \(a_i \pmod{q_i}\) for various moduli \(q_i\). Here we shall concern ourselves with the simple setting where we are sieving the entire integers rather than an interval, and are only removing a finite number of congruence classes \(a_1 \pmod{q_1}, \ldots, a_k \pmod{q_k}\). In this case, the set of integers that remain after the sieving is periodic with period \(Q = \text{lcm}(q_1,\ldots,q_k)\), so one work without loss of generality in the cyclic group \(\mathbf{Z}/Q\mathbf{Z}\). One can then ask: what is the density of the sieved set</p>
+                    
+                    <p style="text-align: center;">
+                        \(\{ n \in \mathbf{Z}/Q\mathbf{Z} : n \neq a_i \bmod q_i \text{ for all } i=1,\ldots,k \}?\) (1)
+                    </p>
+
+                    <p>If the \(q_i\) were all coprime, then it is easy to see from the Chinese remainder theorem that the density is given by the product</p>
+                    
+                    <p style="text-align: center;">
+                        \(\displaystyle \prod_{i=1}^k \left(1 - \frac{1}{q_i}\right).\)
+                    </p>
+
+                    <p>However, when the \(q_i\) are not coprime, the situation is more complicated. One can use the inclusion-exclusion formula to get a complicated expression for the density, but it is not easy to work with. Sieve theory also supplies one with various useful upper and lower bounds (starting with the classical Bonferroni inequalities), but do not give exact formulae.</p>
+
+                    <p>In this blog post I would like to note one simple fact, due to Rogers, that one can say about this problem:</p>
+
+                    <div class="theorem-box">
+                        <div class="theorem-title">Theorem 1 (Rogers' theorem)</div>
+                        <div class="theorem-content">
+                            For fixed \(q_1,\ldots,q_k\), the density of the sieved set is maximized when all the \(a_i\) vanish. Thus,
+                            <p style="margin: 10px 0;">
+                                \(|\{ n \in \mathbf{Z}/Q\mathbf{Z} : n \neq a_i \bmod q_i \text{ for all } i=1,\ldots,k \}|\)
+                            </p>
+                            <p style="margin: 5px 0; text-align: center;">
+                                \(\leq |\{ n \in \mathbf{Z}/Q\mathbf{Z} : n \neq 0 \bmod q_i \text{ for all } i=1,\ldots,k \}|.\)
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="example-title">Example 2</div>
+                        <div class="example-content">
+                            If one sieves out \(1 \pmod{2}\), \(1 \pmod{3}\), and \(2 \pmod{6}\), then only \(0 \pmod{6}\) remains, giving a density of \(1/6\). On the other hand, if one sieves out \(0 \pmod{2}\), \(0 \pmod{3}\), and \(0 \pmod{6}\), then the remaining elements are \(1\) and \(5 \pmod{6}\), giving the larger density of \(2/6\).
+                        </div>
+                    </div>
+
+                    <p>This theorem is somewhat obscure: its only appearance in print is in pages 242-244 of this 1966 text of Halberstam and Roth, where the authors write in a footnote that the result is "unpublished; communicated to the authors by Professor Rogers". I have only been able to find it cited in three places in the literature: in this 1996 paper of Lewis, in this 2007 paper of Filaseta, Ford, Konyagin, Pomerance, and Yu (where they credit Tenenbaum for bringing the reference to their attention), and is also briefly mentioned in this 2008 paper of Ford.</p>
+                </div>
+
+                <!-- 分享区域 -->
+                <div class="share-section">
+                    <div class="share-title">Share this:</div>
+                    <div class="share-buttons">
+                        <button class="share-btn" onclick="printPage()">
+                            <span>🖨️</span> Print
+                        </button>
+                        <button class="share-btn" onclick="shareEmail()">
+                            <span>✉️</span> Email
+                        </button>
+                        <button class="share-btn tooltip" onclick="shareLink(this)">
+                            <span>🔗</span> Share
+                            <span class="tooltiptext" id="shareTooltip">Copy link</span>
+                        </button>
+                        <button class="share-btn" onclick="reblog()">
+                            <span>🔁</span> Reblog
+                        </button>
+                        <button class="share-btn primary" onclick="likePost(this)">
+                            <span>⭐</span> Like
+                        </button>
+                        <span class="like-count" id="likeCount">10 likes</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- 评论区 -->
+            <section class="comments-section">
+                <div class="comments-header">
+                    <span>16 comments</span>
+                    <span class="comments-feed"><a href="#">Comments feed for this article</a></span>
+                </div>
+
+                <ul class="comment-list" id="commentList">
+                    <!-- 评论 1 -->
+                    <li class="comment" data-id="1">
+                        <div class="comment-header">
+                            <span class="comment-author">Anonymous</span>
+                            <span class="comment-date">19 January, 2026 at 10:43 am</span>
+                        </div>
+                        <div class="comment-content">
+                            <p>Dear Terry,</p>
+                            <p>The statement of Theorem 1 is illegible on my screen because the statement overflows the right boundary of the box.</p>
+                            <p><em>[Corrected, thanks – T.]</em></p>
+                        </div>
+                        <div class="comment-actions">
+                            <a onclick="toggleReply(1)">Reply</a>
+                        </div>
+                        
+                        <!-- 回复表单 -->
+                        <div class="reply-form" id="reply-form-1">
+                            <textarea placeholder="Write a reply..."></textarea>
+                            <button onclick="submitReply(1)">Post Reply</button>
+                            <button class="cancel-btn" onclick="toggleReply(1)">Cancel</button>
+                        </div>
+
+                        <!-- 嵌套回复 -->
+                        <div class="comment-replies">
+                            <div class="comment" data-id="2">
+                                <div class="comment-header">
+                                    <span class="comment-author">Terence Tao</span>
+                                    <span class="comment-date">19 January, 2026 at 11:40 am</span>
+                                </div>
+                                <div class="comment-content">
+                                    <p>Yes, I feel there is a strong connection here. Perhaps there is also some continuous analogue of this result involving sliding Gaussians around (possibly involving some sort of entropy functional)? We have the Gaussian correlation inequality, of course, but that is a slightly different statement...</p>
+                                    <p>I also recently learned (from my colleague, Dominique Maldague) of a little-known rearrangement inequality of Montgomery for Fourier series from 1976, which surprised me somewhat given how oscillatory such series are.</p>
+                                </div>
+                                <div class="comment-actions">
+                                    <a onclick="toggleReply(2)">Reply</a>
+                                </div>
+                                <div class="reply-form" id="reply-form-2">
+                                    <textarea placeholder="Write a reply..."></textarea>
+                                    <button onclick="submitReply(2)">Post Reply</button>
+                                    <button class="cancel-btn" onclick="toggleReply(2)">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <!-- 评论 2 -->
+                    <li class="comment" data-id="3">
+                        <div class="comment-header">
+                            <span class="comment-author">pinkthoughtfullydc9abc2e99</span>
+                            <span class="comment-date">24 January, 2026 at 3:48 am</span>
+                        </div>
+                        <div class="comment-content">
+                            <p>This suggests that Rogers' theorem is fundamentally tied to a totally ordered scale structure (as in the p-adic case). One can see a minimal continuous analogue in 1D with nested intervals, where sliding to the origin is a pure rearrangement of coverage multiplicity and convex functionals are monotone. Once partial intersections are allowed, this structure disappears, which may explain the absence of a general continuous entropy formulation.</p>
+                        </div>
+                        <div class="comment-actions">
+                            <a onclick="toggleReply(3)">Reply</a>
+                        </div>
+                        <div class="reply-form" id="reply-form-3">
+                            <textarea placeholder="Write a reply..."></textarea>
+                            <button onclick="submitReply(3)">Post Reply</button>
+                            <button class="cancel-btn" onclick="toggleReply(3)">Cancel</button>
+                        </div>
+                    </li>
+
+                    <!-- 评论 3 -->
+                    <li class="comment" data-id="4">
+                        <div class="comment-header">
+                            <span class="comment-author">blissful6c33668ff8</span>
+                            <span class="comment-date">19 January, 2026 at 12:11 pm</span>
+                        </div>
+                        <div class="comment-content">
+                            <p>Great news — thank you kindly.</p>
+                        </div>
+                        <div class="comment-actions">
+                            <a onclick="toggleReply(4)">Reply</a>
+                        </div>
+                        <div class="reply-form" id="reply-form-4">
+                            <textarea placeholder="Write a reply..."></textarea>
+                            <button onclick="submitReply(4)">Post Reply</button>
+                            <button class="cancel-btn" onclick="toggleReply(4)">Cancel</button>
+                        </div>
+                    </li>
+
+                    <!-- 评论 4 -->
+                    <li class="comment" data-id="5">
+                        <div class="comment-header">
+                            <span class="comment-author">Anonymous</span>
+                            <span class="comment-date">19 January, 2026 at 6:31 pm</span>
+                        </div>
+                        <div class="comment-content">
+                            <p>Which Professor Rogers is this? Hartley Rogers Jr., perhaps?</p>
+                            <p><em>[The Halberstam-Roth text attributes this result to C. A. Rogers. -T.]</em></p>
+                        </div>
+                        <div class="comment-actions">
+                            <a onclick="toggleReply(5)">Reply</a>
+                        </div>
+                        <div class="reply-form" id="reply-form-5">
+                            <textarea placeholder="Write a reply..."></textarea>
+                            <button onclick="submitReply(5)">Post Reply</button>
+                            <button class="cancel-btn" onclick="toggleReply(5)">Cancel</button>
+                        </div>
+                    </li>
+                </ul>
+
+                <!-- 发表评论表单 -->
+                <div class="comment-form" id="mainCommentForm">
+                    <h3>Leave a comment</h3>
+                    <div class="form-row">
+                        <input type="text" id="commentName" placeholder="Name (required)">
+                        <input type="email" id="commentEmail" placeholder="Email (required)">
+                    </div>
+                    <input type="text" id="commentWebsite" placeholder="Website (optional)" style="width: 100%; margin-bottom: 10px;">
+                    <textarea id="commentContent" placeholder="Write a comment..."></textarea>
+                    <button onclick="submitComment()">Post Comment</button>
+                    <p class="comment-note">
+                        To enter in LaTeX in comments, use $latex <Your LaTeX code>$ (without the < and > signs, of course; in fact, these signs should be avoided as they can cause formatting errors). Also, backslashes \ need to be doubled as \\. See the about page for details and for other commenting policy.
+                    </p>
+                </div>
+            </section>
+
+            <!-- 文章导航 -->
+            <div class="post-navigation">
+                <div class="nav-prev">
+                    <a href="#">« The integrated explicit analytic number theory network</a>
+                </div>
+                <div class="nav-next">
+                    <a href="#">A crowdsourced repository for optimization constants? »</a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 What's new | Blog at WordPress.com.</p>
+    </footer>
+
+    <script>
+        // 打印功能
+        function printPage() {
+            window.print();
+        }
+
+        // 邮件分享
+        function shareEmail() {
+            const subject = encodeURIComponent(document.querySelector('.post-title').textContent);
+            const body = encodeURIComponent(`Check out this article: ${window.location.href}`);
+            window.location.href = `mailto:?subject=${subject}&body=${body}`;
+        }
+
+        // 复制链接分享
+        function shareLink(btn) {
+            const url = window.location.href;
+            navigator.clipboard.writeText(url).then(() => {
+                const tooltip = btn.querySelector('.tooltiptext');
+                tooltip.textContent = 'Copied!';
+                setTimeout(() => {
+                    tooltip.textContent = 'Copy link';
+                }, 2000);
+            }).catch(() => {
+                // 降级方案
+                const input = document.createElement('input');
+                input.value = url;
+                document.body.appendChild(input);
+                input.select();
+                document.execCommand('copy');
+                document.body.removeChild(input);
+                alert('Link copied to clipboard!');
+            });
+        }
+
+        // Reblog 功能
+        function reblog() {
+            alert('Reblog feature would connect to your blogging platform.');
+        }
+
+        // Like 功能
+        function likePost(btn) {
+            const countSpan = document.getElementById('likeCount');
+            let count = parseInt(countSpan.textContent);
+            
+            if (btn.classList.contains('liked')) {
+                btn.classList.remove('liked');
+                btn.style.background = '#0066cc';
+                count--;
+            } else {
+                btn.classList.add('liked');
+                btn.style.background = '#e91e63';
+                count++;
+                // 动画效果
+                btn.style.transform = 'scale(1.1)';
+                setTimeout(() => btn.style.transform = 'scale(1)', 200);
+            }
+            countSpan.textContent = count + (count === 1 ? ' like' : ' likes');
+        }
+
+        // 切换回复表单显示
+        function toggleReply(commentId) {
+            const form = document.getElementById(`reply-form-${commentId}`);
+            form.classList.toggle('active');
+            
+            // 关闭其他打开的回复表单
+            document.querySelectorAll('.reply-form').forEach(f => {
+                if (f.id !== `reply-form-${commentId}` && f.classList.contains('active')) {
+                    f.classList.remove('active');
+                }
+            });
+        }
+
+        // 提交回复
+        function submitReply(parentId) {
+            const form = document.getElementById(`reply-form-${parentId}`);
+            const textarea = form.querySelector('textarea');
+            const content = textarea.value.trim();
+            
+            if (!content) {
+                alert('Please write something before posting.');
+                return;
+            }
+
+            // 创建新回复元素
+            const replyDiv = document.createElement('div');
+            replyDiv.className = 'comment';
+            replyDiv.innerHTML = `
+                <div class="comment-header">
+                    <span class="comment-author">You</span>
+                    <span class="comment-date">Just now</span>
+                </div>
+                <div class="comment-content">
+                    <p>${escapeHtml(content)}</p>
+                </div>
+                <div class="comment-actions">
+                    <a onclick="toggleReply(${Date.now()})">Reply</a>
+                </div>
+            `;
+
+            // 找到父评论的回复容器
+            const parentComment = document.querySelector(`li[data-id="${parentId}"]`);
+            let repliesContainer = parentComment.querySelector('.comment-replies');
+            
+            if (!repliesContainer) {
+                repliesContainer = document.createElement('div');
+                repliesContainer.className = 'comment-replies';
+                parentComment.appendChild(repliesContainer);
+            }
+
+            repliesContainer.appendChild(replyDiv);
+            textarea.value = '';
+            form.classList.remove('active');
+            
+            // 滚动到新回复
+            replyDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // 提交主评论
+        function submitComment() {
+            const name = document.getElementById('commentName').value.trim();
+            const email = document.getElementById('commentEmail').value.trim();
+            const content = document.getElementById('commentContent').value.trim();
+
+            if (!name || !email || !content) {
+                alert('Please fill in all required fields (Name, Email, Comment).');
+                return;
+            }
+
+            // 创建新评论
+            const commentList = document.getElementById('commentList');
+            const newComment = document.createElement('li');
+            newComment.className = 'comment';
+            newComment.setAttribute('data-id', Date.now());
+            newComment.innerHTML = `
+                <div class="comment-header">
+                    <span class="comment-author">${escapeHtml(name)}</span>
+                    <span class="comment-date">Just now</span>
+                </div>
+                <div class="comment-content">
+                    <p>${escapeHtml(content)}</p>
+                </div>
+                <div class="comment-actions">
+                    <a onclick="toggleReply(${Date.now()})">Reply</a>
+                </div>
+                <div class="reply-form" id="reply-form-${Date.now()}">
+                    <textarea placeholder="Write a reply..."></textarea>
+                    <button onclick="submitReply(${Date.now()})">Post Reply</button>
+                    <button class="cancel-btn" onclick="toggleReply(${Date.now()})">Cancel</button>
+                </div>
+            `;
+
+            commentList.appendChild(newComment);
+            
+            // 清空表单
+            document.getElementById('commentName').value = '';
+            document.getElementById('commentEmail').value = '';
+            document.getElementById('commentWebsite').value = '';
+            document.getElementById('commentContent').value = '';
+            
+            // 滚动到新评论
+            newComment.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // 更新评论数
+            updateCommentCount();
+        }
+
+        // 更新评论计数
+        function updateCommentCount() {
+            const count = document.querySelectorAll('.comment').length;
+            const header = document.querySelector('.comments-header span:first-child');
+            header.textContent = count + (count === 1 ? ' comment' : ' comments');
+        }
+
+        // HTML 转义防止 XSS
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // 页面加载完成后的初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            // 可以在这里添加从 localStorage 加载已保存评论的逻辑
+            console.log('Page loaded. Ready for comments.');
+        });
+    </script>
+
+    <script>
+        // 全局状态管理
+        const state = {
+            searchTerm: '',
+            selectedCategory: null,
+            selectedArchive: null
+        };
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initStats();
+            initSearch();
+            applyFilters();
+            
+            // 键盘快捷键
+            document.addEventListener('keydown', (e) => {
+                if (e.key === '/' && document.activeElement.id !== 'searchInput') {
+                    e.preventDefault();
+                    document.getElementById('searchInput').focus();
+                }
+                if (e.key === 'Escape') {
+                    resetAllFilters();
+                }
+            });
+        });
+
+        // 初始化统计 - 自动提取并生成归档和分类
+        function initStats() {
+            const articles = document.querySelectorAll('article');
+            const archives = {}; // { '2026-03': { count: 2, label: 'March 2026' } }
+            const categories = {}; // { 'math.CA': 5, 'advertising': 3 }
+
+            articles.forEach(article => {
+                const dateStr = article.getAttribute('data-date'); // 2026-03-23
+                const catsStr = article.getAttribute('data-categories'); // math.CA,math.CV
+                
+                if (dateStr) {
+                    const [year, month] = dateStr.split('-');
+                    const key = `${year}-${month}`;
+                    const monthNames = ['', 'January', 'February', 'March', 'April', 'May', 'June', 
+                                       'July', 'August', 'September', 'October', 'November', 'December'];
+                    const label = `${monthNames[parseInt(month)]} ${year}`;
+                    
+                    if (!archives[key]) {
+                        archives[key] = { count: 0, label: label, year: year, month: month };
+                    }
+                    archives[key].count++;
+                }
+
+                if (catsStr) {
+                    catsStr.split(',').forEach(cat => {
+                        const trimmed = cat.trim();
+                        if (trimmed) {
+                            categories[trimmed] = (categories[trimmed] || 0) + 1;
+                        }
+                    });
+                }
+            });
+
+            // 渲染归档列表（按时间倒序）
+            renderArchives(archives);
+            
+            // 渲染分类列表（按文章数量倒序）
+            renderCategories(categories);
+            
+            // 更新总文章数
+            document.getElementById('totalPosts').textContent = `(${articles.length} posts)`;
+            document.getElementById('footerStats').textContent = `Total ${articles.length} posts`;
+        }
+
+        // 渲染归档列表
+        function renderArchives(archives) {
+            const list = document.getElementById('archivesList');
+            list.innerHTML = '';
+            
+            // 按时间倒序排序
+            const sortedKeys = Object.keys(archives).sort().reverse();
+            
+            sortedKeys.forEach(key => {
+                const item = archives[key];
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <a onclick="filterByArchive('${key}', '${item.label}'); return false;">${item.label}</a>
+                    <span class="count">(${item.count})</span>
+                `;
+                li.setAttribute('data-archive', key);
+                list.appendChild(li);
+            });
+        }
+
+        // 渲染分类列表
+        function renderCategories(categories) {
+            const list = document.getElementById('categoriesList');
+            list.innerHTML = '';
+            
+            // 按文章数量倒序排序
+            const sortedCats = Object.entries(categories).sort((a, b) => b[1] - a[1]);
+            
+            sortedCats.forEach(([cat, count]) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <a onclick="filterByCategory('${cat}'); return false;">${cat}</a>
+                    <span class="count">(${count})</span>
+                `;
+                li.setAttribute('data-category', cat);
+                list.appendChild(li);
+            });
+        }
+
+        // 搜索功能
+        function initSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const clearBtn = document.getElementById('clearSearch');
+            
+            searchInput.addEventListener('input', (e) => {
+                state.searchTerm = e.target.value.toLowerCase().trim();
+                clearBtn.style.display = state.searchTerm ? 'block' : 'none';
+                applyFilters();
+            });
+            
+            clearBtn.addEventListener('click', () => {
+                searchInput.value = '';
+                state.searchTerm = '';
+                clearBtn.style.display = 'none';
+                applyFilters();
+            });
+        }
+
+        // 按标签搜索（辅助函数）
+        function searchByTag(tag) {
+            document.getElementById('searchInput').value = tag;
+            state.searchTerm = tag.toLowerCase();
+            document.getElementById('clearSearch').style.display = 'block';
+            applyFilters();
+        }
+
+        // 按分类筛选
+        function filterByCategory(category) {
+            if (state.selectedCategory === category) {
+                state.selectedCategory = null; // 再次点击取消选择
+            } else {
+                state.selectedCategory = category;
+                // 如果选择了分类，清除归档筛选（互斥逻辑，可选）
+                // state.selectedArchive = null;
+            }
+            applyFilters();
+            updateSidebarActiveState();
+        }
+
+        // 按归档筛选
+        function filterByArchive(key, label) {
+            if (state.selectedArchive === key) {
+                state.selectedArchive = null;
+            } else {
+                state.selectedArchive = key;
+                // 如果选择了归档，清除分类筛选（互斥逻辑，可选）
+                // state.selectedCategory = null;
+            }
+            applyFilters();
+            updateSidebarActiveState();
+        }
+
+        // 统一应用所有筛选条件
+        function applyFilters() {
+            const articles = document.querySelectorAll('article');
+            let visibleCount = 0;
+            
+            articles.forEach(article => {
+                const title = article.getAttribute('data-title').toLowerCase();
+                const tags = article.getAttribute('data-tags').toLowerCase();
+                const content = article.textContent.toLowerCase();
+                const categories = article.getAttribute('data-categories');
+                const date = article.getAttribute('data-date'); // 2026-03-23
+                
+                // 检查搜索匹配
+                const matchesSearch = !state.searchTerm || 
+                    title.includes(state.searchTerm) || 
+                    tags.includes(state.searchTerm) || 
+                    content.includes(state.searchTerm);
+                
+                // 检查分类匹配
+                const matchesCategory = !state.selectedCategory || 
+                    (categories && categories.split(',').map(c => c.trim()).includes(state.selectedCategory));
+                
+                // 检查归档匹配（比较年月）
+                const matchesArchive = !state.selectedArchive || 
+                    (date && date.startsWith(state.selectedArchive));
+                
+                // 所有条件必须同时满足（AND逻辑）
+                if (matchesSearch && matchesCategory && matchesArchive) {
+                    article.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    article.classList.add('hidden');
+                }
+            });
+            
+            // 更新UI状态
+            updateFilterStatus(visibleCount);
+            document.getElementById('noResults').classList.toggle('show', visibleCount === 0);
+        }
+
+        // 更新筛选状态栏显示
+        function updateFilterStatus(visibleCount) {
+            const statusBar = document.getElementById('filterStatus');
+            const activeFilters = document.getElementById('activeFilters');
+            
+            activeFilters.innerHTML = '';
+            let hasFilters = false;
+            
+            // 搜索词标签
+            if (state.searchTerm) {
+                hasFilters = true;
+                activeFilters.innerHTML += `
+                    <span class="filter-tag">
+                        Search: "${escapeHtml(state.searchTerm)}"
+                        <button onclick="clearSearch()">×</button>
+                    </span>
+                `;
+            }
+            
+            // 分类标签
+            if (state.selectedCategory) {
+                hasFilters = true;
+                activeFilters.innerHTML += `
+                    <span class="filter-tag">
+                        Category: ${state.selectedCategory}
+                        <button onclick="filterByCategory('${state.selectedCategory}')">×</button>
+                    </span>
+                `;
+            }
+            
+            // 归档标签
+            if (state.selectedArchive) {
+                hasFilters = true;
+                const label = document.querySelector(`li[data-archive="${state.selectedArchive}"] a`)?.textContent || state.selectedArchive;
+                activeFilters.innerHTML += `
+                    <span class="filter-tag">
+                        Archive: ${label}
+                        <button onclick="filterByArchive('${state.selectedArchive}')">×</button>
+                    </span>
+                `;
+            }
+            
+            statusBar.classList.toggle('active', hasFilters);
+            
+            // 更新搜索统计文本
+            const stats = document.getElementById('searchStats');
+            if (hasFilters) {
+                stats.style.display = 'block';
+                stats.textContent = `Showing ${visibleCount} post${visibleCount !== 1 ? 's' : ''}`;
+            } else {
+                stats.style.display = 'none';
+            }
+        }
+
+        // 更新侧边栏选中状态
+        function updateSidebarActiveState() {
+            // 清除所有active类
+            document.querySelectorAll('.dynamic-list li').forEach(li => li.classList.remove('active'));
+            
+            // 标记当前选中的分类
+            if (state.selectedCategory) {
+                const catLi = document.querySelector(`li[data-category="${state.selectedCategory}"]`);
+                if (catLi) catLi.classList.add('active');
+            }
+            
+            // 标记当前选中的归档
+            if (state.selectedArchive) {
+                const archLi = document.querySelector(`li[data-archive="${state.selectedArchive}"]`);
+                if (archLi) archLi.classList.add('active');
+            }
+        }
+
+        // 清除搜索
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            state.searchTerm = '';
+            document.getElementById('clearSearch').style.display = 'none';
+            applyFilters();
+        }
+
+        // 重置所有筛选
+        function resetAllFilters() {
+            state.searchTerm = '';
+            state.selectedCategory = null;
+            state.selectedArchive = null;
+            
+            document.getElementById('searchInput').value = '';
+            document.getElementById('clearSearch').style.display = 'none';
+            
+            applyFilters();
+            updateSidebarActiveState();
+        }
+
+        // 工具函数：转义HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+
+</body>
+</html>
